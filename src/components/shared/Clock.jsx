@@ -24,6 +24,7 @@ const Clock = ({ title, location, offset, small, difference }) => {
         time,
         title,
         location,
+        offset,
       });
     }, 1000);
 

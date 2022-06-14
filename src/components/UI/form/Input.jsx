@@ -4,7 +4,7 @@ const Input = styled.input`
   width: 100%;
   outline: none;
   border: 2px solid ${(props) => (props.error ? colors.red : "#112d4e")};
-  padding: 4px 10px;
+  padding: ${(props) => (props.small ? "2px 6px" : "4px 10px")};
   border-radius: 2px;
   background: #f9f7f7;
   font-size: 14px;

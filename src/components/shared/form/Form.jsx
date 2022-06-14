@@ -1,11 +1,10 @@
 import { InputContainer, Button, ButtonContainer } from "../../UI";
-
 import TimeZoneSelectGroup from "./TimeZoneSelectGroup";
 import InputGroup from "./InputGroup";
 import { useEffect, useState } from "react";
 import { timeZones, convertTimeZone, getUtcOffset } from "../../../utils";
 
-const Form = ({ updateTime }) => {
+const Form = ({ updateTime, editData }) => {
   const initValue = {
     date: "",
     time: "",
@@ -16,22 +15,40 @@ const Form = ({ updateTime }) => {
   };
 
   const errorObj = { date: "", time: "", title: "" };
-
   const [state, setState] = useState({ ...initValue });
   const [errors, setErrors] = useState({
     ...errorObj,
   });
-
   const [focuses, setFocuses] = useState({
     title: false,
     date: false,
     time: false,
   });
-
-  const [isCustom, setIsCustom] = useState(false);
-
+  const [isCustom, setIsCustom] = useState(true);
   const { date, time, timeZone, title, offset, location } = state;
 
+  // Use Effect for edit data recyling inside the input fields
+  useEffect(() => {
+    if (editData) {
+      setIsCustom(false);
+      const { time: editTime, date: editDate } = convertTimeZone(
+        editData.offset
+      );
+      const obj = {
+        id: editData.id,
+        title: editData.title,
+        date: editDate,
+        time: editTime,
+        offset: editData.offset,
+      };
+      setState((prev) => ({
+        ...prev,
+        ...obj,
+      }));
+    }
+  }, [editData]);
+
+  // On Change handler for input field value change and take state data
   const onChangeHandler = (e) => {
     const { name: key, value } = e.target;
     setState((prev) => ({ ...prev, [key]: value }));
@@ -46,14 +63,15 @@ const Form = ({ updateTime }) => {
     }
   };
 
+  // On Focus error handler for checking which input field touched
   const onFocusHandler = (e) => {
-    console.log("focused", e.target.name);
     setFocuses((prev) => ({
       ...prev,
       [e.target.name]: true,
     }));
   };
 
+  // On Blur handler error validation on after touching inside input field and blur outside
   const handleBlur = (e) => {
     const key = e.target.name;
     const { error, isValid } = checkValidity(state);
@@ -66,14 +84,18 @@ const Form = ({ updateTime }) => {
     }
   };
 
+  // Set time handler for set custom time and automatic time zones time
   const setTimeHandler = (e) => {
     e.preventDefault();
     const { error, isValid } = checkValidity(state);
 
     if (isValid) {
       if (!offset && !location) {
+        console.log("I am inside custom set");
         const utc = getUtcOffset(date, time);
         const data = {
+          date,
+          time,
           title,
           offset: utc,
           location: `(UTC ${utc.split(".")[0]}:${Math.round(
@@ -81,8 +103,12 @@ const Form = ({ updateTime }) => {
           )})`,
         };
         updateTime({ ...data });
+        setState({ ...initValue });
+        setErrors({ ...errorObj });
       } else {
         const data = {
+          date,
+          time,
           title,
           offset,
           location,
@@ -95,6 +121,8 @@ const Form = ({ updateTime }) => {
       setErrors({ ...error });
     }
   };
+
+  // Use Effect for on selecting different time zones and display times inside the input fields
 
   let indexArr = null;
   let utc = null;
@@ -109,13 +137,10 @@ const Form = ({ updateTime }) => {
         ...prev,
         title: timeZone,
       }));
-      const { error } = checkValidity(state);
+      const { isValid } = checkValidity(state);
 
-      if (error.title) {
-        setErrors((prev) => ({
-          ...prev,
-          title: "",
-        }));
+      if (!isValid) {
+        setErrors({ ...errorObj });
       }
 
       interval = setInterval(() => {
@@ -146,6 +171,7 @@ const Form = ({ updateTime }) => {
     return () => clearInterval(interval);
   }, [timeZone]);
 
+  // Form validation checking function
   const checkValidity = (values) => {
     const error = {};
 
@@ -159,7 +185,7 @@ const Form = ({ updateTime }) => {
       error.time = "Invalid Time!";
     }
 
-    if (!values.date && !values.date.trim().length < 10) {
+    if (!values.date && !values.date.trim().length < 6) {
       error.date = "Invalid Date!";
     }
 

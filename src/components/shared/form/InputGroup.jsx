@@ -11,6 +11,7 @@ const InputGroup = ({
   error,
   onFocus,
   onBlur,
+  small,
 }) => {
   return (
     <>
@@ -25,6 +26,7 @@ const InputGroup = ({
         error={error}
         onFocus={onFocus}
         onBlur={onBlur}
+        small={small}
       />
       <div>{error && <InputError>{error}</InputError>}</div>
     </>

@@ -1,7 +1,7 @@
 import { ClientClockContainer, ButtonContainer, Button } from "../UI";
 import Clock from "./Clock";
 
-const ClientTimeClock = ({ item }) => {
+const ClientTimeClock = ({ item, editHandler, deleteHandler }) => {
   return (
     <ClientClockContainer>
       <Clock
@@ -11,11 +11,18 @@ const ClientTimeClock = ({ item }) => {
         small={true}
         difference={item.difference}
       />
+
       <ButtonContainer>
-        <Button size={"small"} color={"red"}>
+        <Button
+          size={"small"}
+          color={"red"}
+          onClick={() => deleteHandler(item.id)}
+        >
           Delete
         </Button>
-        <Button size={"small"}>Edit</Button>
+        <Button size={"small"} onClick={() => editHandler(item.id)}>
+          Edit
+        </Button>
       </ButtonContainer>
     </ClientClockContainer>
   );

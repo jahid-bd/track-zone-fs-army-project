@@ -1,42 +1,72 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
-  Button,
   BaseClockContainer,
-  ButtonContainer,
   Container,
-  ClientClockContainer,
+  ClockItemContainer,
 } from "../components/UI";
-import Clock from "../components/shared/Clock";
 import Form from "../components/shared/form/Form";
 import ClientTimeClock from "../components/shared/ClientTimeClock";
 import { getOffsetDifference } from "../utils";
+import shortid from "shortid";
 
 const ClientClock = ({ baseOffset }) => {
-  const init = {
-    title: "",
-    offset: null,
-    difference: "",
-    events: [
-      {
-        title: "",
-        time: "",
-        differenceTime: "",
-        isCompleted: false,
-      },
-    ],
-  };
+  // const init = {
+  //   title: "",
+  //   offset: null,
+  //   difference: "",
+  //   events: [
+  //     {
+  //       title: "",
+  //       time: "",
+  //       differenceTime: "",
+  //       isCompleted: false,
+  //     },
+  //   ],
+  // };
   const [state, setState] = useState([]);
+  const [editData, setEditData] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
 
+  // Create a new clock and update clock data
   const createClock = (timeData) => {
     const difOffset = getOffsetDifference(baseOffset, timeData.offset);
 
-    const dataObj = {
-      title: timeData.title,
-      offset: timeData.offset,
-      location: timeData.location,
-      difference: difOffset,
-    };
-    setState((prev) => [...prev, { ...dataObj }]);
+    if (isEdit) {
+      let newArr = [];
+      newArr = state.map((item) => {
+        if (item.id === editData.id) {
+          return { ...timeData, difference: difOffset };
+        } else {
+          return item;
+        }
+      });
+
+      setState([...newArr]);
+      setIsEdit(false);
+    } else {
+      const dataObj = {
+        id: shortid.generate(),
+        title: timeData.title,
+        offset: timeData.offset,
+        location: timeData.location,
+        difference: difOffset,
+      };
+      setState((prev) => [...prev, { ...dataObj }]);
+    }
+  };
+
+  // Edit Clock items
+  const editHandler = (id) => {
+    setIsEdit(true);
+    state.map((item) => {
+      if (item.id === id) setEditData({ ...item });
+      return item;
+    });
+  };
+
+  // Delete Clock items
+  const deleteHandler = (id) => {
+    setState((prev) => prev.filter((item) => item.id !== id));
   };
 
   return (
@@ -44,23 +74,20 @@ const ClientClock = ({ baseOffset }) => {
       <BaseClockContainer>
         <h1>Create a New Clock</h1>
         <div>
-          <Form updateTime={createClock} />
+          <Form updateTime={createClock} editData={editData} />
         </div>
       </BaseClockContainer>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          gap: "1rem",
-          flexDirection: "row",
-          padding: "20px",
-        }}
-      >
+      <ClockItemContainer>
         {state.map((item) => (
-          <ClientTimeClock item={item} />
+          <ClientTimeClock
+            key={item.id}
+            item={item}
+            editHandler={editHandler}
+            deleteHandler={deleteHandler}
+          />
         ))}
-      </div>
+      </ClockItemContainer>
     </Container>
   );
 };

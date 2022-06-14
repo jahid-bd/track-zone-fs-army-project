@@ -53,8 +53,8 @@ function convertTimeZone(gmt, local = false) {
   }
 
   return {
-    date: resultDate,
-    time: resultTime,
+    date: resultDate.trim(),
+    time: resultTime.trim(),
   };
 }
 
