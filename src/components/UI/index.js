@@ -15,3 +15,5 @@ export { default as ClientClockContainer } from "./containers/ClientClockContain
 export { default as TimeDifference } from "./clock/TimeDifference";
 export { default as InputError } from "./form/InputError";
 export { default as ClockItemContainer } from "./containers/ClockItemsContainer";
+export { default as EventContainer } from "./containers/EventContainer";
+export { default as PopupContainer } from "./containers/PopupContainer";

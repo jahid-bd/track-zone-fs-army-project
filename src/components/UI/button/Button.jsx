@@ -21,7 +21,7 @@ const Button = styled.button`
     props.color == "red" ? colors.red : colors.primary};
   border: none;
   color: ${colors.white};
-  border-radius: 5px;
+  border-radius: ${(props) => (props.radiusNone ? "" : "5px")};
   box-shadow: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   &:hover {
     background-color: ${(props) =>

@@ -2,7 +2,12 @@ import { InputContainer, Button, ButtonContainer } from "../../UI";
 import TimeZoneSelectGroup from "./TimeZoneSelectGroup";
 import InputGroup from "./InputGroup";
 import { useEffect, useState } from "react";
-import { timeZones, convertTimeZone, getUtcOffset } from "../../../utils";
+import {
+  timeZones,
+  convertTimeZone,
+  getUtcOffset,
+  checkValidity,
+} from "../../../utils";
 
 const Form = ({ updateTime, editData }) => {
   const initValue = {
@@ -15,6 +20,7 @@ const Form = ({ updateTime, editData }) => {
   };
 
   const errorObj = { date: "", time: "", title: "" };
+
   const [state, setState] = useState({ ...initValue });
   const [errors, setErrors] = useState({
     ...errorObj,
@@ -35,7 +41,6 @@ const Form = ({ updateTime, editData }) => {
         editData.offset
       );
       const obj = {
-        id: editData.id,
         title: editData.title,
         date: editDate,
         time: editTime,
@@ -44,6 +49,7 @@ const Form = ({ updateTime, editData }) => {
       setState((prev) => ({
         ...prev,
         ...obj,
+        id: editData.id,
       }));
     }
   }, [editData]);
@@ -90,8 +96,7 @@ const Form = ({ updateTime, editData }) => {
     const { error, isValid } = checkValidity(state);
 
     if (isValid) {
-      if (!offset && !location) {
-        console.log("I am inside custom set");
+      if (!isCustom) {
         const utc = getUtcOffset(date, time);
         const data = {
           date,
@@ -122,8 +127,7 @@ const Form = ({ updateTime, editData }) => {
     }
   };
 
-  // Use Effect for on selecting different time zones and display times inside the input fields
-
+  // Use Effect for on selecting different time zones and display running times inside the input fields
   let indexArr = null;
   let utc = null;
   let city = "";
@@ -170,30 +174,6 @@ const Form = ({ updateTime, editData }) => {
 
     return () => clearInterval(interval);
   }, [timeZone]);
-
-  // Form validation checking function
-  const checkValidity = (values) => {
-    const error = {};
-
-    if (!values.title) {
-      error.title = "Invalid Title!";
-    } else if (String(values.title).trim().length < 3) {
-      error.title = "Title must be at least 3 chars!";
-    }
-
-    if (!values.time && !values.time.trim().length < 5) {
-      error.time = "Invalid Time!";
-    }
-
-    if (!values.date && !values.date.trim().length < 6) {
-      error.date = "Invalid Date!";
-    }
-
-    return {
-      error,
-      isValid: Object.keys(error).length === 0,
-    };
-  };
 
   return (
     <form onSubmit={setTimeHandler}>

@@ -15,6 +15,7 @@ const Clock = ({ title, location, offset, small, difference }) => {
 
   let interval = null;
 
+  // use effect for starting clock with any time offset
   useEffect(() => {
     interval = setInterval(() => {
       const { date, time } = convertTimeZone(offset, true);

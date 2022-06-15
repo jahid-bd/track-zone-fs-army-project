@@ -11,8 +11,10 @@ import shortid from "shortid";
 
 const ClientClock = ({ baseOffset }) => {
   // const init = {
+  //   id: shortid.generate(),
   //   title: "",
   //   offset: null,
+  //   location: '',
   //   difference: "",
   //   events: [
   //     {
