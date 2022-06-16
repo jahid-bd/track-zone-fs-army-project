@@ -17,3 +17,6 @@ export { default as InputError } from "./form/InputError";
 export { default as ClockItemContainer } from "./containers/ClockItemsContainer";
 export { default as EventContainer } from "./containers/EventContainer";
 export { default as PopupContainer } from "./containers/PopupContainer";
+export { default as EventsItemContainer } from "./containers/EventsItemContainer";
+export { default as CloseBtnContainer } from "./containers/CloseBtnContainer";
+export { default as EventItemContainer } from "./containers/EventItemContainer";

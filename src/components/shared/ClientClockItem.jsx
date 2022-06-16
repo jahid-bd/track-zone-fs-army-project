@@ -1,47 +1,28 @@
 import {
+  Container,
   ClientClockContainer,
   ButtonContainer,
   Button,
   PopupContainer,
+  EventsItemContainer,
+  EventContainer,
+  CloseBtnContainer,
 } from "../UI";
 import Clock from "./Clock";
 import { useState, useEffect } from "react";
-import Events from "../../pages/Events";
 import { getOffDiff, getBaseTime } from "../../utils";
 import shortid from "shortid";
+import EventForm from "../event/EventForm";
+import EventItem from "../event/EventItem";
 
-const ClientTimeClock = ({ item, editHandler, deleteHandler }) => {
+const ClientClockItem = ({ item, editHandler, deleteHandler }) => {
   const [eventCounter, setEventCounter] = useState(0);
   const [triger, setTriger] = useState(false);
-
-  const handleClosePopup = () => {
-    setTriger(false);
-  };
-
-  const handleOpenPopup = () => {
-    setTriger(true);
-  };
-
   const [events, setEvents] = useState([]);
   const [editData, setEditData] = useState(null);
   const [isUpdate, setIsUpdate] = useState(false);
 
-  useEffect(() => {
-    setEventCounter(events.length);
-  }, [events]);
-
-  const editEventHandler = (id) => {
-    setIsUpdate(true);
-    events.map((event) => {
-      if (event.id === id) setEditData({ ...event });
-      return event;
-    });
-  };
-
-  const deleteEventHandler = (id) => {
-    setEvents(events.filter((event) => event.id !== id));
-  };
-
+  // Event lyfting from event form and create or update events
   const eventLyfter = (event) => {
     if (isUpdate) {
       let newArr = [];
@@ -73,6 +54,35 @@ const ClientTimeClock = ({ item, editHandler, deleteHandler }) => {
     }
   };
 
+  // Use Effect for update event counter on add events
+  useEffect(() => {
+    setEventCounter(events.length);
+  }, [events]);
+
+  // Event edit handler
+  const editEventHandler = (id) => {
+    setIsUpdate(true);
+    events.map((event) => {
+      if (event.id === id) setEditData({ ...event });
+      return event;
+    });
+  };
+
+  //Event Delete handler
+  const deleteEventHandler = (id) => {
+    setEvents(events.filter((event) => event.id !== id));
+  };
+
+  // This handler for open Event section popup
+  const handleOpenPopup = () => {
+    setTriger(true);
+  };
+
+  // This handler for close Event section popup
+  const handleClosePopup = () => {
+    setTriger(false);
+  };
+
   return (
     <ClientClockContainer>
       <Clock
@@ -102,14 +112,31 @@ const ClientTimeClock = ({ item, editHandler, deleteHandler }) => {
       </ButtonContainer>
       {triger ? (
         <PopupContainer>
-          <Events
-            closeHandler={handleClosePopup}
-            editData={editData}
-            editHandler={editEventHandler}
-            deleteHandler={deleteEventHandler}
-            eventLyfter={eventLyfter}
-            events={events}
-          />
+          <Container>
+            <EventContainer>
+              <EventForm eventLyft={eventLyfter} editData={editData} />
+              <EventsItemContainer>
+                {events.map((event) => (
+                  <EventItem
+                    event={event}
+                    key={event.id}
+                    deleteHandler={deleteEventHandler}
+                    editHandler={editEventHandler}
+                  />
+                ))}
+              </EventsItemContainer>
+              <CloseBtnContainer>
+                <Button
+                  size={"medium"}
+                  color={"red"}
+                  radiusNone={true}
+                  onClick={handleClosePopup}
+                >
+                  X
+                </Button>
+              </CloseBtnContainer>
+            </EventContainer>
+          </Container>
         </PopupContainer>
       ) : (
         ""
@@ -118,4 +145,4 @@ const ClientTimeClock = ({ item, editHandler, deleteHandler }) => {
   );
 };
 
-export default ClientTimeClock;
+export default ClientClockItem;

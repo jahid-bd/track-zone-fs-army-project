@@ -6,8 +6,6 @@ import Clock from "../components/shared/Clock";
 
 const BaseClock = ({ updateOffset }) => {
   const timeObj = {
-    time: "",
-    date: "",
     title: "",
     offset: null,
     location: "",

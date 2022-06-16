@@ -33,100 +33,6 @@ const Form = ({ updateTime, editData }) => {
   const [isCustom, setIsCustom] = useState(true);
   const { date, time, timeZone, title, offset, location } = state;
 
-  // Use Effect for edit data recyling inside the input fields
-  useEffect(() => {
-    if (editData) {
-      setIsCustom(false);
-      const { time: editTime, date: editDate } = convertTimeZone(
-        editData.offset
-      );
-      const obj = {
-        title: editData.title,
-        date: editDate,
-        time: editTime,
-        offset: editData.offset,
-      };
-      setState((prev) => ({
-        ...prev,
-        ...obj,
-        id: editData.id,
-      }));
-    }
-  }, [editData]);
-
-  // On Change handler for input field value change and take state data
-  const onChangeHandler = (e) => {
-    const { name: key, value } = e.target;
-    setState((prev) => ({ ...prev, [key]: value }));
-
-    const { error } = checkValidity(state);
-
-    if (!error[key]) {
-      setErrors((prev) => ({
-        ...prev,
-        [key]: "",
-      }));
-    }
-  };
-
-  // On Focus error handler for checking which input field touched
-  const onFocusHandler = (e) => {
-    setFocuses((prev) => ({
-      ...prev,
-      [e.target.name]: true,
-    }));
-  };
-
-  // On Blur handler error validation on after touching inside input field and blur outside
-  const handleBlur = (e) => {
-    const key = e.target.name;
-    const { error, isValid } = checkValidity(state);
-
-    if (!isValid && focuses[key]) {
-      setErrors((prev) => ({
-        ...prev,
-        [key]: error[key],
-      }));
-    }
-  };
-
-  // Set time handler for set custom time and automatic time zones time
-  const setTimeHandler = (e) => {
-    e.preventDefault();
-    const { error, isValid } = checkValidity(state);
-
-    if (isValid) {
-      if (!isCustom) {
-        const utc = getUtcOffset(date, time);
-        const data = {
-          date,
-          time,
-          title,
-          offset: utc,
-          location: `(UTC ${utc.split(".")[0]}:${Math.round(
-            Number(utc.split(".")[1]) * 0.6
-          )})`,
-        };
-        updateTime({ ...data });
-        setState({ ...initValue });
-        setErrors({ ...errorObj });
-      } else {
-        const data = {
-          date,
-          time,
-          title,
-          offset,
-          location,
-        };
-        updateTime({ ...data });
-        setState({ ...initValue });
-        setErrors({ ...errorObj });
-      }
-    } else {
-      setErrors({ ...error });
-    }
-  };
-
   // Use Effect for on selecting different time zones and display running times inside the input fields
   let indexArr = null;
   let utc = null;
@@ -174,6 +80,96 @@ const Form = ({ updateTime, editData }) => {
 
     return () => clearInterval(interval);
   }, [timeZone]);
+
+  // On Change handler for input field value change and take state data
+  const onChangeHandler = (e) => {
+    const { name: key, value } = e.target;
+    setState((prev) => ({ ...prev, [key]: value }));
+
+    const { error } = checkValidity(state);
+
+    if (!error[key]) {
+      setErrors((prev) => ({
+        ...prev,
+        [key]: "",
+      }));
+    }
+  };
+
+  // On Focus error handler for checking which input field touched
+  const onFocusHandler = (e) => {
+    setFocuses((prev) => ({
+      ...prev,
+      [e.target.name]: true,
+    }));
+  };
+
+  // On Blur handler error validation on after touching inside input field and blur outside
+  const handleBlur = (e) => {
+    const key = e.target.name;
+    const { error, isValid } = checkValidity(state);
+
+    if (!isValid && focuses[key]) {
+      setErrors((prev) => ({
+        ...prev,
+        [key]: error[key],
+      }));
+    }
+  };
+
+  // Set time handler for set custom time and automatic time zones time
+  const setTimeHandler = (e) => {
+    e.preventDefault();
+    const { error, isValid } = checkValidity(state);
+
+    if (isValid) {
+      if (!isCustom) {
+        const utc = getUtcOffset(date, time);
+        const data = {
+          title,
+          offset: utc,
+          location: `(UTC ${utc.split(".")[0]}:${Math.round(
+            Number(utc.split(".")[1]) * 0.6
+          )})`,
+        };
+        updateTime({ ...data });
+        setState({ ...initValue });
+        setErrors({ ...errorObj });
+      } else {
+        const data = {
+          title,
+          offset,
+          location,
+        };
+        updateTime({ ...data });
+        setState({ ...initValue });
+        setErrors({ ...errorObj });
+      }
+    } else {
+      setErrors({ ...error });
+    }
+  };
+
+  // Use Effect for edit data recyling inside the input fields
+  useEffect(() => {
+    if (editData) {
+      setIsCustom(false);
+      const { time: editTime, date: editDate } = convertTimeZone(
+        editData.offset
+      );
+      const obj = {
+        title: editData.title,
+        date: editDate,
+        time: editTime,
+        offset: editData.offset,
+      };
+      setState((prev) => ({
+        ...prev,
+        ...obj,
+        id: editData.id,
+      }));
+    }
+  }, [editData]);
 
   return (
     <form onSubmit={setTimeHandler}>

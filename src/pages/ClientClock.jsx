@@ -5,26 +5,11 @@ import {
   ClockItemContainer,
 } from "../components/UI";
 import Form from "../components/shared/form/Form";
-import ClientTimeClock from "../components/shared/ClientTimeClock";
+import ClientClockItem from "../components/shared/ClientClockItem";
 import { getOffsetDifference } from "../utils";
 import shortid from "shortid";
 
 const ClientClock = ({ baseOffset }) => {
-  // const init = {
-  //   id: shortid.generate(),
-  //   title: "",
-  //   offset: null,
-  //   location: '',
-  //   difference: "",
-  //   events: [
-  //     {
-  //       title: "",
-  //       time: "",
-  //       differenceTime: "",
-  //       isCompleted: false,
-  //     },
-  //   ],
-  // };
   const [state, setState] = useState([]);
   const [editData, setEditData] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
@@ -57,7 +42,7 @@ const ClientClock = ({ baseOffset }) => {
     }
   };
 
-  // Edit Clock items
+  // Edit Clock items handler
   const editHandler = (id) => {
     setIsEdit(true);
     state.map((item) => {
@@ -66,7 +51,7 @@ const ClientClock = ({ baseOffset }) => {
     });
   };
 
-  // Delete Clock items
+  // Delete Clock items handler
   const deleteHandler = (id) => {
     setState((prev) => prev.filter((item) => item.id !== id));
   };
@@ -82,7 +67,7 @@ const ClientClock = ({ baseOffset }) => {
 
       <ClockItemContainer>
         {state.map((item) => (
-          <ClientTimeClock
+          <ClientClockItem
             key={item.id}
             item={item}
             editHandler={editHandler}

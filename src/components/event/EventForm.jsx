@@ -35,7 +35,6 @@ const EventForm = ({ eventLyft, editData }) => {
     e.preventDefault();
 
     const { error, isValid } = checkValidity(formState);
-    console.log(error, isValid);
 
     if (isValid) {
       eventLyft(formState);

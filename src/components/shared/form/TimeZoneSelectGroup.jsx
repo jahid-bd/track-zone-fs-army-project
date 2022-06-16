@@ -8,7 +8,7 @@ const TimeZoneSelectGroup = ({ onChange, value }) => {
       <label htmlFor="timeZone">Time Zone</label>
       <br />
       <Select name="timeZone" id="timeZone" onChange={onChange} value={value}>
-        <option value="" selected>
+        <option value="" defaultValue={""}>
           Custom
         </option>
         {timeZones.map((item) => (
