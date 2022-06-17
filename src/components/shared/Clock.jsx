@@ -6,9 +6,6 @@ const Clock = ({ title, location, offset, small, difference }) => {
   const init = {
     date: "",
     time: "",
-    location: "",
-    title: "",
-    offset: "",
   };
 
   const [clockState, setClockState] = useState({ ...init });
@@ -23,9 +20,6 @@ const Clock = ({ title, location, offset, small, difference }) => {
       setClockState({
         date,
         time,
-        title,
-        location,
-        offset,
       });
     }, 1000);
 
@@ -34,8 +28,8 @@ const Clock = ({ title, location, offset, small, difference }) => {
 
   return (
     <>
-      <Location small={small}>{clockState.title}</Location>
-      <UtcHour small={small}>{clockState.location}</UtcHour>
+      <Location small={small}>{title}</Location>
+      <UtcHour small={small}>{location}</UtcHour>
       {difference && <TimeDifference>{difference}</TimeDifference>}
       <Time small={small}>{clockState.time}</Time>
       <Date small={small}>{clockState.date}</Date>

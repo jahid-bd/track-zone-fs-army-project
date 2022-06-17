@@ -89,10 +89,9 @@ const Form = ({ updateTime, editData }) => {
     const { error } = checkValidity(state);
 
     if (!error[key]) {
-      setErrors((prev) => ({
-        ...prev,
+      setErrors({
         [key]: "",
-      }));
+      });
     }
   };
 
