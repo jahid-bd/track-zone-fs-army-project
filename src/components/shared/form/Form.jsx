@@ -9,7 +9,7 @@ import {
   checkValidity,
 } from "../../../utils";
 
-const Form = ({ updateTime, editData }) => {
+const Form = ({ updateTime, editData, isEdit }) => {
   const initValue = {
     date: "",
     time: "",
@@ -221,7 +221,9 @@ const Form = ({ updateTime, editData }) => {
       </InputContainer>
 
       <ButtonContainer>
-        <Button size={"medium"}>Set Time</Button>
+        <Button size={"medium"}>
+          {isEdit === true ? "Update" : "Set Time"}
+        </Button>
       </ButtonContainer>
     </form>
   );

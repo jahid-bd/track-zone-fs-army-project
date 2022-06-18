@@ -23,12 +23,18 @@ const ClientClockItem = ({ item, editHandler, deleteHandler }) => {
   const [isUpdate, setIsUpdate] = useState(false);
 
   // Event lyfting from event form and create or update events
-  const eventLyfter = (event) => {
+  const createEvent = (event) => {
+    const { time, date } = getBaseTime(
+      event.time,
+      event.date,
+      getOffDiff(item.difference)
+    );
+
     if (isUpdate) {
       let newArr = [];
       newArr = events.map((item) => {
         if (item.id === editData.id) {
-          return { ...event };
+          return { ...event, baseTime: time, baseDate: date };
         } else {
           return item;
         }
@@ -37,11 +43,6 @@ const ClientClockItem = ({ item, editHandler, deleteHandler }) => {
       setEvents([...newArr]);
       setIsUpdate(false);
     } else {
-      const { time, date } = getBaseTime(
-        event.time,
-        event.date,
-        getOffDiff(item.difference)
-      );
       setEvents((prev) => [
         ...prev,
         {
@@ -114,7 +115,11 @@ const ClientClockItem = ({ item, editHandler, deleteHandler }) => {
         <PopupContainer>
           <Container>
             <EventContainer>
-              <EventForm eventLyft={eventLyfter} editData={editData} />
+              <EventForm
+                eventLyft={createEvent}
+                editData={editData}
+                isUpdate={isUpdate}
+              />
               <EventsItemContainer>
                 {events.map((event) => (
                   <EventItem

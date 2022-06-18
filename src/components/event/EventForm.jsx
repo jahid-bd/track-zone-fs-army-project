@@ -3,7 +3,7 @@ import InputGroup from "../shared/form/InputGroup";
 import { useEffect, useState } from "react";
 import { checkValidity } from "../../utils";
 
-const EventForm = ({ eventLyft, editData }) => {
+const EventForm = ({ eventLyft, editData, isUpdate }) => {
   const init = {
     title: "",
     time: "",
@@ -83,7 +83,9 @@ const EventForm = ({ eventLyft, editData }) => {
         </div>
       </InputContainer>
       <div>
-        <Button size={"small"}>Add Event</Button>
+        <Button size={"small"}>
+          {isUpdate === true ? "Update" : "Add Event"}
+        </Button>
       </div>
     </form>
   );
