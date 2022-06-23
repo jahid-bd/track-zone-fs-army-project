@@ -61,7 +61,12 @@ const ClientClock = ({ baseOffset }) => {
       <BaseClockContainer>
         <h1>Create a New Clock</h1>
         <div>
-          <Form updateTime={createClock} editData={editData} isEdit={isEdit} />
+          <Form
+            updateTime={createClock}
+            editData={editData}
+            isEdit={isEdit}
+            local={false}
+          />
         </div>
       </BaseClockContainer>
 

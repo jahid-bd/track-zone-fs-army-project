@@ -9,7 +9,7 @@ import {
   checkValidity,
 } from "../../../utils";
 
-const Form = ({ updateTime, editData, isEdit }) => {
+const Form = ({ updateTime, editData, isEdit, local = true }) => {
   const initValue = {
     date: "",
     time: "",
@@ -222,7 +222,9 @@ const Form = ({ updateTime, editData, isEdit }) => {
 
       <ButtonContainer>
         <Button size={"medium"}>
-          {isEdit === true ? "Update" : "Set Time"}
+          {isEdit === true
+            ? "Update"
+            : `${local ? "Set Time" : "Create Clock"}`}
         </Button>
       </ButtonContainer>
     </form>
